@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#fff0f5">
+<title>生日快乐 🎂</title>
+<style>
+:root{
+  --pink:#ff8fab; --pink-deep:#f2709c; --pink-light:#ffe3ee; --pink-bg:#fff0f5;
+  --mint:#5ecf94; --mint-light:#dff7ea;
+  --sun:#ffc94d; --sun-light:#fff3d3;
+  --sky:#5fb8e0; --sky-light:#e2f4fc;
+  --lav:#a98fe0; --lav-light:#ece6fb;
+  --ink:#5a5a7d; --ink-soft:#9494b0;
+  --card:#ffffff; --shadow:0 10px 26px rgba(150,120,190,.16);
+  --radius:22px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  background:linear-gradient(160deg,#ffe9f2 0%,#fff6ea 38%,#e9f7ff 72%,#eef2ff 100%);
+  color:var(--ink);
+  overflow-x:hidden;
+  touch-action:manipulation;
+  min-height:100dvh;
+}
+/* ========== 背景飘落 ========== */
+.falling{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.falling span{
+  position:absolute;top:-12vh;opacity:0;
+  animation:fall linear infinite;
+  filter:drop-shadow(0 2px 4px rgba(150,120,190,.15));
+}
+@keyframes fall{
+  0%{transform:translateY(-12vh) rotate(0deg);opacity:0}
+  8%{opacity:.75}
+  90%{opacity:.7}
+  100%{transform:translateY(112vh) rotate(340deg);opacity:0}
+}
+/* ========== 特效画布 ========== */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
+/* ========== 页面框架 ========== */
+main{position:relative;z-index:1;max-width:520px;margin:0 auto;min-height:100dvh}
+.page{
+  display:none;flex-direction:column;align-items:center;
+  min-height:100dvh;padding:26px 22px calc(30px + env(safe-area-inset-bottom));
+  animation:pageIn .45s cubic-bezier(.22,.9,.32,1);
+}
+.page.active{display:flex}
+@keyframes pageIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+/* 通用标题 */
+.page-title{font-size:26px;font-weight:800;letter-spacing:1px;color:var(--ink);text-align:center;line-height:1.4}
+.page-sub{font-size:14px;color:var(--ink-soft);margin-top:6px;text-align:center;line-height:1.6}
+/* 通用返回按钮 */
+.back-btn{
+  position:fixed;top:calc(14px + env(safe-area-inset-top));left:16px;z-index:50;
+  width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(255,255,255,.85);color:var(--ink);font-size:18px;
+  box-shadow:var(--shadow);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s;
+}
+.back-btn:active{transform:scale(.9)}
+/* 主按钮 */
+.btn{
+  border:none;cursor:pointer;border-radius:999px;
+  padding:14px 34px;font-size:17px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,var(--pink),#ffb3c9);
+  box-shadow:0 8px 20px rgba(255,143,171,.4);
+  transition:transform .15s, box-shadow .15s;
+  font-family:inherit;letter-spacing:1px;
+}
+.btn:active{transform:scale(.94);box-shadow:0 4px 10px rgba(255,143,171,.35)}
+.btn.mint{background:linear-gradient(135deg,var(--mint),#8fe0b4);box-shadow:0 8px 20px rgba(94,207,148,.35)}
+.btn.sky{background:linear-gradient(135deg,var(--sky),#9fd8f0);box-shadow:0 8px 20px rgba(95,184,224,.4)}
+.btn.sun{background:linear-gradient(135deg,var(--sun),#ffdd85);color:#7a5c00;box-shadow:0 8px 20px rgba(255,201,77,.4)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+.btn-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+/* ========== 封面 ========== */
+#page-cover{justify-content:center;text-align:center}
+.cover-cake{
+  font-size:96px;line-height:1;margin-bottom:6px;display:inline-block;
+  animation:bob 2.6s ease-in-out infinite;
+  filter:drop-shadow(0 14px 18px rgba(255,143,171,.35));
+}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-16px) rotate(3deg)}}
+.cover-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.8);border:1.5px dashed var(--pink);
+  color:var(--pink-deep);font-size:13px;font-weight:700;
+  padding:7px 16px;border-radius:999px;margin:10px auto 4px;
+}
+.cover-title{
+  font-size:42px;font-weight:900;letter-spacing:2px;line-height:1.2;margin:14px 0 4px;
+  background:linear-gradient(120deg,#f2709c,#ffb3c9 45%,#ffc94d);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  font-style:italic;
+}
+.cover-name-wrap{margin-top:26px;width:100%;max-width:300px}
+.cover-name-wrap label{display:block;font-size:14px;color:var(--ink-soft);margin-bottom:10px;font-weight:600}
+.name-input{
+  width:100%;text-align:center;font-size:19px;font-weight:700;color:var(--ink);
+  padding:14px 18px;border-radius:16px;border:2px solid var(--pink-light);
+  background:#fff;outline:none;transition:border .2s;font-family:inherit;
+}
+.name-input:focus{border-color:var(--pink)}
+.name-input::placeholder{color:#cfcfe4;font-weight:500;font-size:15px}
+.cover-hint{margin-top:16px;font-size:12px;color:var(--ink-soft);letter-spacing:2px}
+/* ========== 菜单 ========== */
+#page-menu{justify-content:flex-start;padding-top:70px}
+.menu-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  width:100%;margin-top:22px;
+}
+.mode-card{
+  position:relative;background:var(--card);border-radius:var(--radius);
+  padding:20px 14px 16px;text-align:center;cursor:pointer;
+  box-shadow:var(--shadow);border:2px solid transparent;
+  transition:transform .18s,border .18s;overflow:hidden;
+}
+.mode-card:active{transform:scale(.95)}
+.mode-card.wide{grid-column:1/-1}
+.mode-card .icon{font-size:46px;line-height:1.2;display:block;margin-bottom:8px}
+.mode-card .name{font-size:17px;font-weight:800;color:var(--ink);display:block}
+.mode-card .desc{font-size:12px;color:var(--ink-soft);margin-top:5px;line-height:1.5;display:block}
+.mode-card.c-candle{border-color:var(--sun-light);background:linear-gradient(180deg,#fffdf5,var(--card))}
+.mode-card.c-balloon{border-color:var(--pink-light);background:linear-gradient(180deg,#fff7fa,var(--card))}
+.mode-card.c-cards{border-color:var(--lav-light);background:linear-gradient(180deg,#fbf9ff,var(--card))}
+.mode-card.c-fire{border-color:var(--sky-light);background:linear-gradient(180deg,#f4fbff,var(--card))}
+.mode-card.c-cake{border-color:var(--mint-light);background:linear-gradient(180deg,#f5fdf8,var(--card))}
+.mode-card .done-badge{
+  position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--mint),#8fe0b4);color:#fff;font-size:13px;
+  display:none;align-items:center;justify-content:center;box-shadow:0 4px 8px rgba(94,207,148,.4);
+}
+.mode-card.done .done-badge{display:flex}
+.mode-card.done .name::after{content:" ✓";color:var(--mint);font-size:14px}
+/* ========== 模式页公共 ========== */
+.mode-body{margin-top:26px;width:100%;display:flex;flex-direction:column;align-items:center;flex:1}
+.progress{
+  display:flex;gap:8px;margin-top:16px;align-items:center;
+  font-size:13px;color:var(--ink-soft);font-weight:600;
+}
+.progress .dots{display:flex;gap:6px}
+.progress .dot{width:10px;height:10px;border-radius:50%;background:#e8dff3;transition:.3s}
+.progress .dot.on{background:var(--pink);transform:scale(1.15)}
+/* ========== 吹蜡烛 ========== */
+#page-candle .cake-emoji{font-size:110px;line-height:1;margin-top:6px;filter:drop-shadow(0 12px 16px rgba(255,201,77,.35))}
+.candle-row{display:flex;gap:22px;align-items:flex-end;margin-top:14px;margin-bottom:10px}
+.candle{position:relative;width:22px;display:flex;flex-direction:column;align-items:center;transition:transform .3s}
+.candle .flame{
+  width:20px;height:26px;border-radius:50% 50% 46% 46%;
+  background:radial-gradient(circle at 50% 75%,#fff6c0 0%,#ffd166 42%,#ff9f43 78%,#ff7b54 100%);
+  animation:flicker .5s ease-in-out infinite alternate;
+  transform-origin:50% 100%;
+  position:relative;z-index:2;margin-bottom:2px;
+}
+@keyframes flicker{from{transform:scale(1) rotate(-2deg)}to{transform:scale(1.12,.94) rotate(2deg)}}
+.candle .wick{width:2px;height:8px;background:#8a7a5a;border-radius:2px}
+.candle .body{
+  width:22px;height:64px;border-radius:6px 6px 4px 4px;
+  background:repeating-linear-gradient(45deg,#ff9fb8 0 6px,#ffb9cc 6px 12px);
+  position:relative;
+}
+.candle .body::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(255,255,255,.5)}
+.candle.out .flame{animation:none;background:transparent;width:0;height:0;margin-bottom:6px}
+.candle.out .body{filter:brightness(.82) saturate(.7)}
+.smoke{position:absolute;top:-30px;left:50%;width:6px;height:6px;border-radius:50%;background:rgba(170,160,180,.6);pointer-events:none}
+.smoke.on{animation:smokeUp 1.4s ease-out forwards}
+@keyframes smokeUp{
+  0%{transform:translate(-50%,0) scale(.6);opacity:.8}
+  100%{transform:translate(-50%,-60px) scale(1.8);opacity:0}
+}
+.blow-zone{
+  margin-top:18px;width:220px;height:96px;border-radius:18px;
+  background:rgba(255,255,255,.75);border:2px dashed var(--sun-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:var(--ink-soft);cursor:pointer;
+  transition:.15s;user-select:none;
+}
+.blow-zone:active{transform:scale(.96);background:#fff}
+.blow-zone .puff{font-size:26px;margin-right:8px}
+/* ========== 气球 ========== */
+.balloon-field{
+  position:relative;width:100%;flex:1;min-height:360px;margin-top:10px;
+}
+.balloon{
+  position:absolute;cursor:pointer;transition:transform .15s;user-select:none;
+}
+.balloon:active{transform:scale(1.08)}
+.balloon .ball{
+  width:64px;height:78px;border-radius:50% 50% 50% 50%/44% 44% 56% 56%;
+  background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.85) 0 6%,rgba(255,255,255,.15) 10%,transparent 40%),var(--c);
+  box-shadow:inset -6px -8px 14px rgba(0,0,0,.08);
+  animation:sway 3.2s ease-in-out infinite alternate;
+  transform-origin:50% 100%;
+}
+.balloon .knot{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--c);margin:0 auto;filter:brightness(.92)}
+.balloon .string{width:1.5px;height:46px;background:rgba(120,110,150,.45);margin:0 auto;border-radius:2px}
+@keyframes sway{from{transform:rotate(-5deg)}to{transform:rotate(6deg)}}
+.balloon .pop-fx{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:44px;opacity:0;pointer-events:none}
+.balloon.burst{animation:burstPop .35s ease-out forwards}
+@keyframes burstPop{0%{transform:scale(1);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.balloon.burst .pop-fx{opacity:1;animation:popEmoji .5s ease-out forwards}
+@keyframes popEmoji{0%{transform:translate(-50%,-50%) scale(.4);opacity:0}30%{opacity:1}100%{transform:translate(-50%,-50%) scale(1.4);opacity:0}}
+.note{
+  position:fixed;z-index:40;left:50%;width:250px;padding:16px 18px;
+  background:#fff;border-radius:16px;box-shadow:0 14px 30px rgba(150,120,190,.25);
+  border:1.5px solid var(--pink-light);
+  font-size:14px;font-weight:600;line-height:1.6;text-align:center;color:var(--ink);
+  animation:noteFall 4.5s ease-in forwards;pointer-events:none;
+  transform:translateX(-50%);
+}
+.note::before{content:"🎀";position:absolute;top:-12px;left:12px;font-size:20px}
+@keyframes noteFall{
+  0%{top:6%;opacity:0;transform:translateX(-50%) rotate(-6deg) scale(.9)}
+  8%{opacity:1;transform:translateX(-50%) rotate(3deg) scale(1)}
+  30%{top:42%}
+  55%{top:66%}
+  85%{top:84%;opacity:1}
+  100%{top:96%;opacity:0;transform:translateX(-50%) rotate(8deg)}
+}
+/* ========== 翻卡 ========== */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;margin-top:24px}
+.flip-card{aspect-ratio:3/4.1;perspective:900px;cursor:pointer}
+.flip-card .inner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.3,1.3,.4,1);transform-style:preserve-3d}
+.flip-card.flipped .inner{transform:rotateY(180deg)}
+.flip-card .face{
+  position:absolute;inset:0;border-radius:16px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  box-shadow:var(--shadow);padding:8px;
+}
+.flip-card .back-face{
+  background:linear-gradient(145deg,var(--lav),#cdbdf0);
+  color:#fff;font-size:34px;
+}
+.flip-card .back-face::after{content:"✦";position:absolute;font-size:64px;opacity:.25}
+.flip-card .front-face{
+  background:#fff;transform:rotateY(180deg);border:2px solid var(--lav-light);
+  text-align:center;
+}
+.flip-card .front-face .f-emoji{font-size:38px;line-height:1.1}
+.flip-card .front-face .f-text{font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.45}
+.flip-card .front-face .f-tag{font-size:10px;color:var(--ink-soft);font-weight:600}
+/* ========== 烟花 ========== */
+#page-fire{justify-content:flex-start;padding-top:64px}
+.fire-banner{
+  width:100%;margin-top:18px;padding:26px 22px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#2b2350,#4a3d78);
+  box-shadow:0 14px 30px rgba(60,45,110,.35);
+  text-align:center;position:relative;overflow:hidden;
+}
+.fire-banner::before,.fire-banner::after{
+  content:"";position:absolute;border-radius:50%;opacity:.5;
+}
+.fire-banner::before{width:120px;height:120px;left:-30px;top:-40px;background:radial-gradient(circle,#ff9fb8,transparent 70%)}
+.fire-banner::after{width:140px;height:140px;right:-40px;bottom:-50px;background:radial-gradient(circle,#7ec8e3,transparent 70%)}
+.fire-text{
+  font-size:30px;font-weight:900;color:#fff;line-height:1.5;
+  text-shadow:0 0 18px rgba(255,255,255,.45);
+  min-height:90px;display:flex;align-items:center;justify-content:center;
+  transition:opacity .4s;position:relative;z-index:2;
+}
+.fire-text.fading{opacity:0}
+.fire-tip{position:relative;z-index:2;color:#cdc3f0;font-size:13px;margin-top:10px}
+.fire-actions{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:30px}
+.fire-counter{font-size:13px;color:var(--ink-soft);font-weight:600}
+/* ========== 切蛋糕 ========== */
+#page-cake .big-cake{font-size:150px;line-height:1;margin-top:4px;filter:drop-shadow(0 16px 20px rgba(94,207,148,.3))}
+.cake-plate{
+  position:relative;margin-top:10px;display:flex;align-items:center;justify-content:center;
+  transition:transform .35s;
+}
+.cake-plate.shake{animation:shake .5s}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(3deg)}}
+.cut-line{
+  position:absolute;top:-30px;left:50%;width:4px;height:220px;border-radius:4px;
+  background:repeating-linear-gradient(0deg,#f2709c 0 6px,transparent 6px 12px);
+  transform-origin:50% 60%;opacity:0;pointer-events:none;
+}
+.cut-line.show{animation:cutDraw .4s ease-out forwards}
+@keyframes cutDraw{0%{opacity:0;transform:rotate(var(--r)) scaleY(0)}100%{opacity:.85;transform:rotate(var(--r)) scaleY(1)}}
+.cut-count{font-size:15px;font-weight:800;color:var(--mint);margin-top:18px}
+.piece-hint{display:flex;gap:8px;margin-top:8px}
+.piece-hint .piece{width:34px;height:34px;font-size:20px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;box-shadow:var(--shadow);opacity:.35;transition:.3s}
+.piece-hint .piece.on{opacity:1;transform:scale(1.1)}
+/* ========== 祝福信 ========== */
+#page-letter{justify-content:flex-start;padding-top:60px}
+.letter{
+  width:100%;background:#fff;border-radius:20px;box-shadow:var(--shadow);
+  padding:26px 22px 30px;margin-top:18px;position:relative;
+  border:2px solid var(--pink-light);
+}
+.letter::before{
+  content:"✉️";position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  font-size:36px;background:var(--pink-bg);border-radius:50%;
+  width:52px;height:52px;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--pink-light);
+}
+.letter-head{text-align:center;margin-top:10px}
+.letter-head .to{font-size:22px;font-weight:900;color:var(--pink-deep)}
+.letter-head .sub{font-size:12.5px;color:var(--ink-soft);margin-top:6px;letter-spacing:1px}
+.letter-list{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:12px}
+.letter-list li{
+  background:linear-gradient(90deg,var(--pink-bg),#fff);
+  border:1px solid var(--pink-light);border-radius:14px;
+  padding:11px 14px;font-size:14.5px;font-weight:600;line-height:1.55;
+  display:flex;align-items:center;gap:10px;
+}
+.letter-list li .li-emoji{font-size:22px;flex-shrink:0}
+.letter-empty{text-align:center;color:var(--ink-soft);font-size:14px;padding:26px 0;line-height:1.8}
+.letter-end{margin-top:22px;text-align:center;font-size:14.5px;font-weight:700;color:var(--lav);line-height:1.8}
+.letter-sign{margin-top:14px;text-align:right;font-size:13px;color:var(--ink-soft)}
+/* ========== 弹窗 ========== */
+.modal-mask{
+  position:fixed;inset:0;z-index:70;background:rgba(80,60,110,.35);
+  display:none;align-items:center;justify-content:center;padding:30px;
+  backdrop-filter:blur(3px);
+}
+.modal-mask.show{display:flex}
+.modal-card{
+  background:#fff;border-radius:24px;width:100%;max-width:320px;
+  padding:30px 24px 24px;text-align:center;position:relative;
+  box-shadow:0 20px 50px rgba(80,60,110,.35);
+  animation:modalIn .4s cubic-bezier(.3,1.4,.5,1);
+}
+@keyframes modalIn{from{transform:scale(.7) translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.modal-emoji{font-size:64px;line-height:1;animation:bob 1.6s ease-in-out infinite;display:inline-block}
+.modal-title{font-size:21px;font-weight:900;color:var(--ink);margin-top:14px}
+.modal-text{font-size:14.5px;color:var(--ink-soft);margin-top:10px;line-height:1.7}
+.modal-gift{
+  margin-top:16px;padding:13px 14px;border-radius:14px;
+  background:linear-gradient(120deg,#fff6ea,#ffeef7);
+  border:1.5px dashed var(--pink);
+  font-size:14px;font-weight:700;color:var(--pink-deep);line-height:1.6;
+}
+.modal-btn{margin-top:22px}
+/* 小提示 toast */
+.toast{
+  position:fixed;left:50%;bottom:44px;transform:translateX(-50%) translateY(20px);
+  background:rgba(70,55,95,.88);color:#fff;font-size:13.5px;font-weight:600;
+  padding:11px 20px;border-radius:999px;z-index:80;opacity:0;
+  transition:.3s;pointer-events:none;max-width:80vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* 顶部小步点 */
+.step-tip{font-size:13px;color:var(--ink-soft);font-weight:700;margin-top:8px;letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<div class="falling" id="falling" aria-hidden="true"></div>
+<canvas id="fx"></canvas>
+
+<main id="app">
+
+  <!-- ============ 封面 ============ -->
+  <section class="page active" id="page-cover">
+    <div class="cover-tag">🎉 生日专属互动</div>
+    <div class="cover-cake">🎂</div>
+    <h1 class="cover-title">Happy<br>Birthday</h1>
+    <div class="cover-name-wrap">
+      <label for="nameInput">给谁送祝福呀？</label>
+      <input class="name-input" id="nameInput" type="text" maxlength="12" placeholder="输入 TA 的名字">
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="btnStart">开始祝福 🎈</button>
+    </div>
+    <p class="cover-hint">· 5 种小玩法 · 满满仪式感 ·</p>
+  </section>
+
+  <!-- ============ 模式菜单 ============ -->
+  <section class="page" id="page-menu">
+    <h2 class="page-title" id="menuHello">嗨，来选个玩法吧 ✨</h2>
+    <p class="page-sub">每完成一个玩法，都会收获一句祝福<br>最后会汇成一封专属生日信 💌</p>
+    <div class="menu-grid" id="menuGrid">
+      <div class="mode-card c-candle" data-mode="candle">
+        <span class="done-badge">✓</span>
+        <span class="icon">🕯️</span>
+        <span class="name">吹蜡烛许愿</span>
+        <span class="desc">呼～吹灭蜡烛，愿望起飞</span>
+      </div>
+      <div class="mode-card c-balloon" data-mode="balloon">
+        <span class="done-badge">✓</span>
+        <span class="icon">🎈</span>
+        <span class="name">戳气球</span>
+        <span class="desc">啪！戳破烦恼，好运蹦出来</span>
+      </div>
+      <div class="mode-card c-cards" data-mode="cards">
+        <span class="done-badge">✓</span>
+        <span class="icon">🎴</span>
+        <span class="name">翻祝福卡</span>
+        <span class="desc">翻一翻，解锁 6 句小确幸</span>
+      </div>
+      <div class="mode-card c-cake" data-mode="cake">
+        <span class="done-badge">✓</span>
+        <span class="icon">🍰</span>
+        <span class="name">切蛋糕</span>
+        <span class="desc">切三刀，好运分块送达</span>
+      </div>
+      <div class="mode-card c-fire wide" data-mode="fire">
+        <span class="done-badge">✓</span>
+        <span class="icon">🎆</span>
+        <span class="name">生日烟花</span>
+        <span class="desc">点一点屏幕，为 TA 放一场专属烟花</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn sun" id="btnLetter">打开生日信 💌</button>
+    </div>
+  </section>
+
+  <!-- ============ 模式1 吹蜡烛 ============ -->
+  <section class="page" id="page-candle">
+    <h2 class="page-title">吹蜡烛许愿 🕯️</h2>
+    <p class="page-sub" id="candleHint">一共 3 根蜡烛，全部吹灭就能许愿啦</p>
+    <div class="mode-body">
+      <div class="candle-row" id="candleRow"></div>
+      <div class="cake-emoji">🎂</div>
+      <div class="blow-zone" id="blowZone"><span class="puff">💨</span>对着这里吹气～</div>
+      <div class="progress"><span id="candleCount">0 / 3</span></div>
+    </div>
+    <button class="back-btn" data-back="page-menu">‹</button>
+  </section>
+
+  <!-- ============ 模式2 戳气球 ============ -->
+  <section class="page" id="page-balloon">
+    <h2 class="page-title">戳气球 🎈</h2>
+    <p class="page-sub" id="balloonHint">戳破 9 个气球，好运全都蹦出来</p>
+    <div class="mode-body">
+      <div class="balloon-field" id="balloonField"></div>
+      <div class="progress"><span id="balloonCount">0 / 9</span></div>
+    </div>
+    <button class="back-btn" data-back="page-menu">‹</button>
+  </section>
+
+  <!-- ============ 模式3 翻祝福卡 ============ -->
+  <section class="page" id="page-cards">
+    <h2 class="page-title">翻祝福卡 🎴</h2>
+    <p class="page-sub">轻轻点一下，翻开你的小确幸</p>
+    <div class="mode-body">
+      <div class="card-grid" id="cardGrid"></div>
+      <div class="progress"><span id="cardCount">0 / 6</span></div>
+      <div class="btn-row">
+        <button class="btn ghost" id="btnReshuffle">洗牌重翻 🔄</button>
+      </div>
+    </div>
+    <button class="back-btn" data-back="page-menu">‹</button>
+  </section>
+
+  <!-- ============ 模式4 生日烟花 ============ -->
+  <section class="page" id="page-fire">
+    <h2 class="page-title">生日烟花 🎆</h2>
+    <p class="page-sub">在深蓝夜空里，为 TA 点亮专属浪漫</p>
+    <div class="fire-banner" id="fireBanner">
+      <div class="fire-text" id="fireText"></div>
+      <div class="fire-tip">👆 点一点屏幕任意处，绽放烟花</div>
+    </div>
+    <div class="fire-actions">
+      <div class="fire-counter" id="fireCounter">已收集 0 句烟花祝福</div>
+      <button class="btn sky" id="btnCollectFire">收下此刻祝福 💌</button>
+    </div>
+    <button class="back-btn" data-back="page-menu">‹</button>
+  </section>
+
+  <!-- ============ 模式5 切蛋糕 ============ -->
+  <section class="page" id="page-cake">
+    <h2 class="page-title">切蛋糕 🍰</h2>
+    <p class="page-sub">切三刀，把好运分给每一个人</p>
+    <div class="mode-body">
+      <div class="cake-plate" id="cakePlate">
+        <div class="big-cake">🎂</div>
+        <div class="cut-line" id="cutLine" style="--r:-24deg"></div>
+        <div class="cut-line" id="cutLine2" style="--r:24deg"></div>
+        <div class="cut-line" id="cutLine3" style="--r:0deg"></div>
+      </div>
+      <div class="cut-count" id="cutCount">已切 0 / 3 刀</div>
+      <div class="piece-hint" id="pieceHint">
+        <span class="piece on">🍰</span>
+        <span class="piece">🍰</span>
+        <span class="piece">🍰</span>
+        <span class="piece">🍰</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn mint" id="btnCut">切一刀 🔪</button>
+      </div>
+    </div>
+    <button class="back-btn" data-back="page-menu">‹</button>
+  </section>
+
+  <!-- ============ 祝福信 ============ -->
+  <section class="page" id="page-letter">
+    <h2 class="page-title">你的生日信 📮</h2>
+    <div class="letter">
+      <div class="letter-head">
+        <div class="to" id="letterTo">给 宝贝 的生日祝福</div>
+        <div class="sub">这封信里，装满了今日份的小确幸</div>
+      </div>
+      <ul class="letter-list" id="letterList"></ul>
+      <div class="letter-end" id="letterEnd"></div>
+      <div class="letter-sign">—— 来自爱你的人 💗</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="btnReplay">再玩一次 🎈</button>
+      <button class="btn ghost" id="btnBackCover">返回封面</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- 弹窗 -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal-card">
+    <div class="modal-emoji" id="modalEmoji">🎉</div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-text" id="modalText"></div>
+    <div class="modal-gift" id="modalGift" style="display:none"></div>
+    <div class="btn-row modal-btn">
+      <button class="btn" id="modalBtn">好耶 ✨</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ================= 基础工具 ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const rand = (a,b) => a + Math.random()*(b-a);
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+
+/* ================= 状态 ================= */
+const state = {
+  name: "宝贝",
+  blessings: [],           // {emoji, text}
+  done: { candle:false, balloon:false, cards:false, fire:false, cake:false },
+  currentFire: "",
+  fireCollected: 0,
+};
+
+const GIFT_EMOJI = { candle:"🕯️", balloon:"🎈", cards:"🎴", fire:"🎆", cake:"🍰" };
+
+/* 祝福语库 */
+const BLESSINGS = {
+  candle: [
+    "许愿成功！愿你的每一个心愿，都在未来悄悄实现 🌠",
+    "蜡烛吹灭，烦恼拜拜，好运正在赶来的路上～",
+    "听说吹灭蜡烛的瞬间，宇宙会记住你的愿望 ✨",
+  ],
+  balloon: [
+    "9 个气球全戳破，烦恼清零，好运 +999！🎈",
+    "气球爆掉的声音，是烦恼说再见的声音 🎈",
+    "戳戳戳！把一整年的好运都戳出来啦 🎈",
+  ],
+  cards: [
+    { e:"🍀", t:"好运常伴", d:"愿你被幸运包围，好运常伴左右～" },
+    { e:"💕", t:"有人爱你", d:"你值得世间所有的爱与温柔～" },
+    { e:"🎂", t:"生日快乐", d:"今天是你的主场，尽情快乐吧！" },
+    { e:"💤", t:"好梦连连", d:"愿每个夜晚，都有甜甜的梦～" },
+    { e:"🏃", t:"活力满分", d:"新的一岁，健康活力满满！" },
+    { e:"🌈", t:"心想事成", d:"所有愿望，通通为你实现！" },
+  ],
+  fire: [
+    "祝你生日快乐 🎂",
+    "愿你眼里有光，心中有糖 🌟",
+    "好事发生，烦恼清零 ✨",
+    "每天都要元气满满 🍀",
+    "愿你被爱包围，闪闪发光 💖",
+    "新的一岁，精彩继续 🎆",
+  ],
+  cake: [
+    "第一刀，切走所有烦恼！",
+    "第二刀，切来满满好运！",
+    "第三刀，切出甜甜未来！",
+  ],
+};
+const LETTER_END = [
+  "愿这封信里的小确幸，陪你一整年 🌟",
+  "你值得世间所有美好，生日快乐 💖",
+  "生日快乐，不止今天，而是天天都快乐！",
+  "愿新的一岁，万事胜意，平安喜乐 🍀",
+];
+
+/* ================= 音效（Web Audio 合成，无需音频文件） ================= */
+let actx = null;
+function sfx(kind){
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if(actx.state === "suspended") actx.resume();
+    const t = actx.currentTime;
+    const map = {
+      pop:      [[900,0.05,"triangle",0]],
+      ding:     [[880,0.08,"sine",0],[1318,0.12,"sine",0.03]],
+      whoosh:   [[320,0.16,"sawtooth",0],[180,0.2,"sine",0.05]],
+      boom:     [[150,0.1,"square",0],[60,0.16,"sine",0.02]],
+      sparkle:  [[1568,0.05,"sine",0],[2093,0.09,"sine",0.03],[2637,0.12,"sine",0.06]],
+      chop:     [[220,0.06,"triangle",0],[440,0.1,"triangle",0.03]],
+      fanfare:  [[523,0.09,"sine",0],[659,0.09,"sine",0.08],[784,0.09,"sine",0.16],[1046,0.22,"sine",0.24]],
+    };
+    (map[kind]||[]).forEach(([f,dur,type,delay])=>{
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type; o.frequency.value = f;
+      const st = t + delay;
+      g.gain.setValueAtTime(0.0001, st);
+      g.gain.exponentialRampToValueAtTime(0.22, st+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, st+dur);
+      o.connect(g); g.connect(actx.destination);
+      o.start(st); o.stop(st+dur+0.03);
+    });
+  }catch(e){}
+}
+
+/* ================= 背景飘落 ================= */
+(function(){
+  const box = $("#falling");
+  const chars = ["🌸","⭐","💗","🍀","🎀","🦋","✨","☁️","🌷"];
+  for(let i=0;i<16;i++){
+    const s = document.createElement("span");
+    s.textContent = pick(chars);
+    const size = rand(14,28);
+    s.style.fontSize = size+"px";
+    s.style.left = rand(0,100)+"vw";
+    s.style.animationDuration = rand(9,20)+"s";
+    s.style.animationDelay = rand(-20,0)+"s";
+    s.style.opacity = rand(.25,.6);
+    box.appendChild(s);
+  }
+})();
+
+/* ================= 特效画布（烟花 / 爆气球碎片） ================= */
+const canvas = $("#fx"), cctx = canvas.getContext("2d");
+let parts = [], dpr = 1;
+function fitCanvas(){
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = innerWidth * dpr;
+  canvas.height = innerHeight * dpr;
+  cctx.setTransform(dpr,0,0,dpr,0,0);
+}
+fitCanvas();
+window.addEventListener("resize", fitCanvas);
+
+function spawnPart(p){ parts.push(p); }
+const FW_COLORS = ["#ff8fab","#ffd166","#7ec8e3","#a98fe0","#5ecf94","#ffb3c9"];
+
+/* 烟花：上升 → 爆开 */
+function firework(x,y){
+  spawnPart({
+    x, y, vx:0, vy:-rand(7,9), g:0.12, life:0, max:60,
+    color:"#fff6c0", size:3, kind:"rise", targetY: y - rand(120,200),
+  });
+  sfx("boom");
+  /* 微弱后响 */
+  setTimeout(()=>sfx("sparkle"), 120);
+}
+/* 气球爆开碎片 */
+function balloonBurst(x,y,color){
+  for(let i=0;i<16;i++){
+    const a = rand(0,Math.PI*2), sp = rand(2,7);
+    spawnPart({ x, y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-2, g:0.16,
+      life:0, max:rand(26,44), color, size:rand(2,4), kind:"piece" });
+  }
+  spawnPart({ x, y, vx:0, vy:0, g:0, life:0, max:8, color:"#fff", size:30, kind:"flash" });
+  sfx("pop");
+}
+
+let lastFrame = 0;
+function loop(ts){
+  requestAnimationFrame(loop);
+  const dt = Math.min((ts - lastFrame)/16.7, 3) || 1; lastFrame = ts;
+  cctx.clearRect(0,0,innerWidth,innerHeight);
+  for(let i=parts.length-1;i>=0;i--){
+    const p = parts[i];
+    p.life += dt;
+    if(p.life >= p.max){ parts.splice(i,1); continue; }
+    const prog = p.life / p.max;
+    if(p.kind === "rise"){
+      p.vy += p.g * dt;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      if(p.y <= p.targetY){
+        /* 到达顶点：绽放 */
+        for(let j=0;j<30;j++){
+          const a = (j/30)*Math.PI*2, sp = rand(2.4,5.4);
+          spawnPart({ x:p.x, y:p.y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, g:0.045,
+            life:0, max:rand(46,64), color:pick(FW_COLORS), size:rand(2,3.6), kind:"spark" });
+        }
+        for(let j=0;j<6;j++){
+          const a = (j/6)*Math.PI*2 + rand(-.2,.2), sp = 6;
+          spawnPart({ x:p.x, y:p.y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, g:0.05,
+            life:0, max:40, color:"#fff", size:2.5, kind:"star", trail:true });
+        }
+        spawnPart({ x:p.x, y:p.y, vx:0, vy:0, g:0, life:0, max:10, color:"#fff8dc", size:46, kind:"flash" });
+        sfx("sparkle");
+        parts.splice(i,1); continue;
+      }
+    } else {
+      p.vx *= 0.985; p.vy = p.vy*0.985 + p.g*dt;
+      p.x += p.vx*dt; p.y += p.vy*dt;
+    }
+    const alpha = p.kind==="flash" ? 1-prog : 1-prog;
+    cctx.globalAlpha = Math.max(alpha,0);
+    cctx.fillStyle = p.color;
+    if(p.kind === "star"){
+      cctx.save();
+      cctx.translate(p.x,p.y);
+      cctx.rotate(prog*8);
+      cctx.fillRect(-p.size,-p.size,p.size*2,p.size*2);
+      cctx.restore();
+    } else {
+      cctx.beginPath();
+      cctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      cctx.fill();
+    }
+    cctx.globalAlpha = 1;
+  }
+}
+requestAnimationFrame(loop);
+
+/* ================= 页面切换 ================= */
+function showPage(id){
+  $$(".page").forEach(p=>p.classList.remove("active"));
+  const page = document.getElementById(id);
+  page.classList.add("active");
+  window.scrollTo(0,0);
+  if(id === "page-menu") refreshMenu();
+  if(id === "page-letter") renderLetter();
+}
+document.querySelectorAll("[data-back]").forEach(b=>{
+  b.addEventListener("click", ()=>showPage(b.dataset.back));
+});
+
+/* ================= 弹窗 / toast ================= */
+let modalCb = null;
+function showModal({emoji,title,text,gift,btn,onClose}){
+  $("#modalEmoji").textContent = emoji;
+  $("#modalTitle").textContent = title;
+  $("#modalText").textContent = text || "";
+  const g = $("#modalGift");
+  if(gift){ g.style.display = "block"; g.textContent = gift; }
+  else g.style.display = "none";
+  $("#modalBtn").textContent = btn || "好耶 ✨";
+  modalCb = onClose || null;
+  $("#modalMask").classList.add("show");
+}
+$("#modalBtn").addEventListener("click", ()=>{
+  $("#modalMask").classList.remove("show");
+  if(modalCb) modalCb();
+});
+$("#modalMask").addEventListener("click", e=>{
+  if(e.target === $("#modalMask")){ $("#modalMask").classList.remove("show"); if(modalCb) modalCb(); }
+});
+
+let toastTimer = null;
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* 收集祝福 */
+function collect(emoji, text){
+  state.blessings.push({ emoji, text });
+}
+function markDone(mode){
+  state.done[mode] = true;
+}
+
+/* ================= 封面 ================= */
+$("#btnStart").addEventListener("click", ()=>{
+  const v = $("#nameInput").value.trim();
+  state.name = v || "宝贝";
+  $("#menuHello").textContent = "嗨，" + state.name + "，选个玩法吧 ✨";
+  $("#letterTo").textContent = "给 " + state.name + " 的生日祝福";
+  showPage("page-menu");
+});
+$("#nameInput").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#btnStart").click(); });
+
+/* ================= 菜单 ================= */
+function refreshMenu(){
+  $$(".mode-card").forEach(c=>{
+    c.classList.toggle("done", !!state.done[c.dataset.mode]);
+  });
+}
+$("#menuGrid").addEventListener("click", e=>{
+  const card = e.target.closest(".mode-card");
+  if(!card) return;
+  const mode = card.dataset.mode;
+  if(mode==="candle") initCandle();
+  else if(mode==="balloon") initBalloons();
+  else if(mode==="cards") initCards();
+  else if(mode==="cake") initCake();
+  else if(mode==="fire") initFire();
+  sfx("ding");
+  showPage("page-"+mode);
+});
+$("#btnLetter").addEventListener("click", ()=>showPage("page-letter"));
+
+/* ================= 模式1：吹蜡烛 ================= */
+let candleLeft = 0, candleCollected = false;
+function initCandle(){
+  candleLeft = 3; candleCollected = false;
+  const row = $("#candleRow");
+  row.innerHTML = "";
+  for(let i=0;i<3;i++){
+    const c = document.createElement("div");
+    c.className = "candle";
+    c.innerHTML = '<div class="flame"></div><div class="wick"></div><div class="body"></div><div class="smoke"></div>';
+    row.appendChild(c);
+  }
+  $("#candleCount").textContent = candleLeft + " / 3";
+  $("#candleHint").textContent = "一共 3 根蜡烛，全部吹灭就能许愿啦";
+}
+let lastBlow = 0;
+function blow(){
+  if(candleCollected) return;
+  const now = Date.now();
+  if(now - lastBlow < 400) return;   /* 防止 touchstart+click 双触发 */
+  lastBlow = now;
+  const candles = $$("#candleRow .candle:not(.out)");
+  if(!candles.length){ return; }
+  const c = pick(candles);
+  c.classList.add("out");
+  c.querySelector(".smoke").classList.add("on");
+  candleLeft--;
+  $("#candleCount").textContent = candleLeft + " / 3";
+  sfx("whoosh");
+  toast("呼～ 蜡烛灭了一根 💨");
+  if(candleLeft === 0){
+    candleCollected = true;
+    const gift = pick(BLESSINGS.candle);
+    setTimeout(()=>{
+      sfx("fanfare");
+      showModal({
+        emoji:"🌠", title:"许愿成功！",
+        text:"闭上眼睛，在心里默念三遍愿望……",
+        gift:"✨ 收获祝福：" + gift,
+        btn:"收下祝福 💌",
+        onClose:()=>{ collect(GIFT_EMOJI.candle, gift); markDone("candle"); showPage("page-menu"); }
+      });
+    }, 600);
+  }
+}
+$("#blowZone").addEventListener("click", blow);
+$("#blowZone").addEventListener("touchstart", e=>{ e.preventDefault(); blow(); }, {passive:false});
+
+/* ================= 模式2：戳气球 ================= */
+let balloonLeft = 0;
+function initBalloons(){
+  balloonLeft = 9;
+  const field = $("#balloonField");
+  field.innerHTML = "";
+  const colors = ["#ff8fab","#ffd166","#7ec8e3","#a98fe0","#5ecf94","#ff9f68"];
+  const placed = [];
+  for(let i=0;i<9;i++){
+    let x,y,tryN=0;
+    do{
+      x = rand(8,84); y = rand(8,70);
+      tryN++;
+    } while(placed.some(p=>Math.hypot(p.x-x,p.y-y)<24) && tryN<50);
+    placed.push({x,y});
+    const b = document.createElement("div");
+    b.className = "balloon";
+    b.style.left = x+"%"; b.style.top = y+"%";
+    b.style.setProperty("--c", pick(colors));
+    b.style.animationDelay = rand(-3,0)+"s";
+    b.innerHTML = '<div class="ball"></div><div class="knot"></div><div class="string"></div><div class="pop-fx">💥</div>';
+    b.addEventListener("click", ()=>popBalloon(b));
+    field.appendChild(b);
+  }
+  $("#balloonCount").textContent = "0 / 9";
+  $("#balloonHint").textContent = "戳破 9 个气球，好运全都蹦出来";
+}
+function popBalloon(b){
+  if(b.classList.contains("burst")) return;
+  const r = b.getBoundingClientRect();
+  const color = getComputedStyle(b).getPropertyValue("--c").trim();
+  b.classList.add("burst");
+  balloonBurst(r.left+r.width/2, r.top+r.height/2, color);
+  balloonLeft--;
+  $("#balloonCount").textContent = (9-balloonLeft) + " / 9";
+  /* 掉落祝福纸条 */
+  const note = document.createElement("div");
+  note.className = "note";
+  note.textContent = "🎈 " + pick(["好运来敲门啦","烦恼飞走啦","快乐加倍啦","愿望要成真啦","元气充值成功","甜蜜送达中","幸运 +100","星星为你亮起","微笑挂在脸上"]);
+  document.body.appendChild(note);
+  setTimeout(()=>note.remove(), 4600);
+  if(balloonLeft === 0){
+    setTimeout(()=>{
+      sfx("fanfare");
+      const gift = pick(BLESSINGS.balloon);
+      showModal({
+        emoji:"🎉", title:"9 个气球全戳破！",
+        text:"烦恼通通爆炸，好运装满一箩筐～",
+        gift:"✨ 收获祝福：" + gift,
+        btn:"收下祝福 💌",
+        onClose:()=>{ collect(GIFT_EMOJI.balloon, gift); markDone("balloon"); showPage("page-menu"); }
+      });
+    }, 500);
+  }
+}
+
+/* ================= 模式3：翻祝福卡 ================= */
+let flippedCount = 0, cardCollected = false;
+function initCards(){
+  flippedCount = 0; cardCollected = false;
+  const grid = $("#cardGrid");
+  grid.innerHTML = "";
+  const deck = [...BLESSINGS.cards].sort(()=>Math.random()-.5);
+  deck.forEach((item,i)=>{
+    const c = document.createElement("div");
+    c.className = "flip-card";
+    c.innerHTML =
+      '<div class="inner">' +
+        '<div class="face back-face">🎴</div>' +
+        '<div class="face front-face">' +
+          '<div class="f-emoji">'+item.e+'</div>' +
+          '<div class="f-text">'+item.t+'</div>' +
+          '<div class="f-tag">'+item.d+'</div>' +
+        '</div>' +
+      '</div>';
+    c.addEventListener("click", ()=>{
+      if(c.classList.contains("flipped")) return;
+      c.classList.add("flipped");
+      sfx("ding");
+      flippedCount++;
+      $("#cardCount").textContent = flippedCount + " / 6";
+      if(flippedCount === 6 && !cardCollected){
+        cardCollected = true;
+        setTimeout(()=>{
+          sfx("fanfare");
+          showModal({
+            emoji:"🎴", title:"6 句祝福集齐！",
+            text:"每一张卡片，都是一份心意～",
+            gift:"✨ 6 句祝福已收进生日信",
+            btn:"收下祝福 💌",
+            onClose:()=>{
+              BLESSINGS.cards.forEach(it=>collect(GIFT_EMOJI.cards, it.t + "：" + it.d));
+              markDone("cards");
+              showPage("page-menu");
+            }
+          });
+        }, 500);
+      }
+    });
+    grid.appendChild(c);
+  });
+  $("#cardCount").textContent = "0 / 6";
+}
+$("#btnReshuffle").addEventListener("click", ()=>{
+  if(!cardCollected) initCards();
+  else initCards();
+  sfx("sparkle");
+});
+
+/* ================= 模式4：生日烟花 ================= */
+let fireTimer = null;
+function initFire(){
+  state.currentFire = pick(BLESSINGS.fire);
+  $("#fireText").textContent = state.currentFire;
+  $("#fireCounter").textContent = "已收集 " + state.fireCollected + " 句烟花祝福";
+  clearInterval(fireTimer);
+  fireTimer = setInterval(()=>{
+    const el = $("#fireText");
+    el.classList.add("fading");
+    setTimeout(()=>{
+      state.currentFire = pick(BLESSINGS.fire);
+      el.textContent = state.currentFire;
+      el.classList.remove("fading");
+    }, 380);
+  }, 3200);
+}
+/* 点击屏幕放烟花 */
+$("#page-fire").addEventListener("pointerdown", e=>{
+  firework(e.clientX, e.clientY);
+});
+$("#btnCollectFire").addEventListener("click", ()=>{
+  if(!state.currentFire) return;
+  collect(GIFT_EMOJI.fire, state.currentFire);
+  state.fireCollected++;
+  $("#fireCounter").textContent = "已收集 " + state.fireCollected + " 句烟花祝福";
+  markDone("fire");
+  sfx("ding");
+  toast("已收下：『" + state.currentFire + "』 💌");
+});
+
+/* ================= 模式5：切蛋糕 ================= */
+let cutCount = 0, cakeCollected = false;
+function initCake(){
+  cutCount = 0; cakeCollected = false;
+  $("#cutCount").textContent = "已切 0 / 3 刀";
+  $$("#page-cake .cut-line").forEach(l=>l.classList.remove("show"));
+  $$("#pieceHint .piece").forEach((p,i)=>p.classList.toggle("on", i===0));
+}
+function cutCake(){
+  if(cakeCollected) return;
+  const plate = $("#cakePlate");
+  plate.classList.remove("shake");
+  void plate.offsetWidth;
+  plate.classList.add("shake");
+  sfx("chop");
+  const lines = $$("#page-cake .cut-line");
+  lines[cutCount].classList.add("show");
+  cutCount++;
+  $("#cutCount").textContent = "已切 " + cutCount + " / 3 刀";
+  $$("#pieceHint .piece").forEach((p,i)=>p.classList.toggle("on", i<=cutCount));
+  const gift = BLESSINGS.cake[cutCount-1];
+  toast("🍰 " + gift);
+  if(cutCount === 3){
+    cakeCollected = true;
+    setTimeout(()=>{
+      sfx("fanfare");
+      showModal({
+        emoji:"🍰", title:"蛋糕分好啦！",
+        text:"四份蛋糕，四倍快乐，大家都有份～",
+        gift:"✨ 收获祝福：" + BLESSINGS.cake.join("；"),
+        btn:"收下祝福 💌",
+        onClose:()=>{
+          BLESSINGS.cake.forEach(t=>collect(GIFT_EMOJI.cake, t));
+          markDone("cake");
+          showPage("page-menu");
+        }
+      });
+    }, 600);
+  }
+}
+$("#btnCut").addEventListener("click", cutCake);
+
+/* ================= 祝福信 ================= */
+function renderLetter(){
+  const list = $("#letterList");
+  list.innerHTML = "";
+  if(state.blessings.length === 0){
+    list.innerHTML = '<li class="letter-empty" style="display:block">信纸还是空的呢～<br>先去玩玩小游戏，收集祝福吧 🎈</li>';
+  } else {
+    state.blessings.forEach((b,i)=>{
+      const li = document.createElement("li");
+      li.innerHTML = '<span class="li-emoji">'+b.emoji+'</span><span>'+b.text+'</span>';
+      list.appendChild(li);
+    });
+  }
+  $("#letterEnd").textContent = pick(LETTER_END);
+}
+$("#btnReplay").addEventListener("click", ()=>{
+  state.blessings = [];
+  state.fireCollected = 0;
+  Object.keys(state.done).forEach(k=>state.done[k]=false);
+  toast("重新开始，再收集一遍祝福吧 ✨");
+  showPage("page-menu");
+});
+$("#btnBackCover").addEventListener("click", ()=>{
+  $("#nameInput").value = "";
+  showPage("page-cover");
+});
+
+/* ================= 启动 ================= */
+showPage("page-cover");
+</script>
+</body>
+</html>
